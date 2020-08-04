@@ -1,0 +1,68 @@
+class QuoteBox extends React.Component {
+  //fetch quote on load
+  componentDidMount() {
+    window.addEventListener("load", this.fetchQuoteData)
+  }
+  
+ //fetch a quote and output to html elements
+ fetchQuoteData = async () => {
+    let response = await fetch("https://thesimpsonsquoteapi.glitch.me/quotes")
+    if (!response.ok){
+      throw new Error("HTTP error! status: ${response.status}")
+    } else{
+      let data = await response.json()
+      
+      let quoteData = data
+      document.getElementById("text").innerHTML = quoteData[0].quote
+      document.getElementById("author").innerHTML = "- " + quoteData[0].character
+      document.getElementById("image").src = quoteData[0].image
+      document.getElementById("tweet-quote").href = 'http://twitter.com/intent/tweet?text="' + quoteData[0].quote + '" - ' + quoteData[0].character + '. https://codepen.io/Penguin123ab/full/eYJqJLe'
+    }
+  }
+ 
+  render(){
+    return(
+      <div id = "quote-box">
+        <div class = "row">
+          {/*Bootstrap 12 wide means each div is on a new row*/}
+          <div class = "col-xs-12">
+          
+            <h3 id = "text">Quote here</h3>
+            <h4 id = "author">Author</h4>
+            
+          </div>
+          
+          <div class = "col-xs-12">
+            <img id = "image" class = "rounded mx-auto d-block" src = "" alt = "Authors image"></img>
+          </div>
+             
+          <div id = "buttons" class = "col-xs-12">
+            <a id = "tweet-quote" class = "button" href = "twitter.com/intent/tweet" target = "_blank"><i class = "fa fa-twitter fa-2x" aria-hidden = "true"></i>Tweet quote</a>
+            <button id = "new-quote" onClick = {this.fetchQuoteData}>New Quote</button> 
+          </div>
+          
+      </div>
+    </div>
+    )
+  }
+}
+          
+class App extends React.Component {
+  
+  render(){
+    return(
+      <div>
+        <QuoteBox />
+        {/*credits for API used*/}
+        <div id = "credits">
+          <a href = "https://thesimpsonsquoteapi.glitch.me/" target = "_blank">Simpsons Quotes API</a>
+        </div>
+      </div>
+    )
+  }
+}
+//render     
+const app = document.getElementById('app')
+ReactDOM.render(<App />, app);
+          
+
